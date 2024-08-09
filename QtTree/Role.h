@@ -3,28 +3,27 @@
 
 #include <iostream>
 #include <vector>
-#include <QLineEdit>  
 
 using namespace std;
 
 class Role {
 private:
     int x = 8;
+    static int idCounter;
+    int id;
 
 public:
     int level;
     string name;
     string position;
-    vector<Role> subordinates;
-    QLineEdit* roleField;
+    vector<Role*> subordinates;
 
 
     Role(int level, string name, string position);
 
-    void addSubordinate(const Role& person);
+    void addSubordinate(Role* person);
 
     void printSubordinates();
-    ~Role();
 };
 
 #endif

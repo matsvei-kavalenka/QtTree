@@ -1,29 +1,26 @@
 #include "Role.h"
 
+int Role::idCounter = 0;
 
-Role::Role(int level, string name, string position) {
+
+Role::Role(int level, string name, string position): id(++idCounter) {
 	this->level = level;
 	this->name = name;
 	this->position = position;
+	id++;
 
-	roleField = new QLineEdit();
-	roleField->setText(QString::fromStdString(name));
-	roleField->setObjectName("roleField");
-	roleField->setGeometry(QRect(400, 300, 100, 25));
 }
 
-void Role::addSubordinate(const Role& person) {
-	cout << "Adding " << person.name << " as a subordinate of " << this->name << endl;
-	subordinates.push_back(person);
-}
-
-void Role::printSubordinates() {
-	for (Role person : subordinates) {
-		cout << person.name << endl;
+void Role::addSubordinate(Role* person) {
+	if (person) {
+		cout << "Adding " << person->name << " as a subordinate of " << this->name << endl;
+		subordinates.push_back(person);
 	}
 }
 
-
-Role::~Role() {
-	delete roleField;
+void Role::printSubordinates() {
+	for (const Role* person : subordinates) {
+		cout << person->name << endl;
+	}
 }
+

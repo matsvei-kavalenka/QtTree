@@ -14,51 +14,52 @@
    <string>QtTree</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="addSubordinateBtn">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>300</y>
-      <width>60</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="nameField">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>200</y>
-      <width>100</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="placeholderText">
-     <string>Name</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="positionField">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>250</y>
-      <width>100</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="placeholderText">
-     <string>Position</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QFrame" name="treeFrame">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="levelEdit">
+      <property name="placeholderText">
+       <string>Level</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="nameField">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="positionField">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Position</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="addSubordinateBtn">
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
