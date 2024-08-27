@@ -13,10 +13,16 @@
   <property name="windowTitle">
    <string>QtTree</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(226, 232, 240);</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QFrame" name="treeFrame">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(226, 232, 240);</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::Shape::StyledPanel</enum>
       </property>
@@ -26,14 +32,16 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="levelEdit">
-      <property name="placeholderText">
-       <string>Level</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <widget class="QLineEdit" name="nameField">
+      <property name="styleSheet">
+       <string notr="true">        background: rgb(216, 232, 240);
+        border: 1px solid black;
+        padding: 0.2em 1em;
+        color:  black;
+        letter-spacing: 1.8px;
+        border-radius: 8px;
+</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -44,6 +52,15 @@
     </item>
     <item>
      <widget class="QLineEdit" name="positionField">
+      <property name="styleSheet">
+       <string notr="true">        background: rgb(216, 232, 240);
+        border: 1px solid black;
+        padding: 0.2em 1em;
+        color:  black;
+        letter-spacing: 1.8px;
+        border-radius: 8px;
+</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -54,6 +71,13 @@
     </item>
     <item>
      <widget class="QPushButton" name="addSubordinateBtn">
+      <property name="styleSheet">
+       <string notr="true">color: black;
+background-color: white;
+border: 1px solid black;
+border-radius: 8px;
+height: 25px;</string>
+      </property>
       <property name="text">
        <string>Add</string>
       </property>

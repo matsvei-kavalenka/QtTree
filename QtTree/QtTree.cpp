@@ -1,62 +1,120 @@
 #include "QtTree.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-
-int QtTree::levels = -1;
 
 QtTree::QtTree(QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    levelWidgets.clear();
+
     connect(ui.addSubordinateBtn, &QPushButton::clicked, this, &QtTree::on_addSubordinateBtn_clicked);
 }
 
 void QtTree::on_addSubordinateBtn_clicked() {
-    QString levelText = ui.levelEdit->text(); 
-    int level = levelText.toInt();
+    QString name = ui.nameField->text();
+    QString position = ui.positionField->text();
 
-	cout << widgetVector.size() << endl;
+    if (lastFocusedButton) {
+        void* ptr = lastFocusedButton->property("rolePtr").value<void*>();
+        Role* roleHead = static_cast<Role*>(ptr);
+        QColor color = roleHead->getColor();
 
-    
-    if (widgetVector.size() <= level ){
-		createLevel(level);
+        int newLevel = roleHead->getLevel() + 1;
+        QWidget* levelWidget = nullptr;
+
+        if (levelWidgets.size() <= newLevel) {
+            levelWidget = new QWidget(ui.treeFrame);
+            QVBoxLayout* mainLayout = qobject_cast<QVBoxLayout*>(ui.treeFrame->layout());
+            QHBoxLayout* hLayout = new QHBoxLayout(levelWidget);
+            levelWidget->setLayout(hLayout);
+
+            mainLayout->addWidget(levelWidget);
+            levelWidgets.push_back(levelWidget);
+        }
+        else {
+            levelWidget = levelWidgets[newLevel];
+        }
+
+        Role* role = new Role(newLevel, name, position, color, levelWidget);
+        roles.push_back(unique_ptr<Role>(role));
+
+        roleHead->addSubordinate(role);
+
+        QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(levelWidget->layout());
+        layout->addWidget(role->getButton());
+
+        connect(role, &Role::focusChanged, this, &QtTree::onButtonFocusChanged);
+
+        ui.nameField->clear();
+        ui.positionField->clear();
     }
+    else {
+        if (levelWidgets.empty()) {
+            QWidget* levelWidget = new QWidget(ui.treeFrame);
+            QVBoxLayout* mainLayout = new QVBoxLayout(ui.treeFrame);
+            ui.treeFrame->setLayout(mainLayout);
 
-	QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(widgetVector[level]->layout());
+            QHBoxLayout* hLayout = new QHBoxLayout(levelWidget);
+            levelWidget->setLayout(hLayout);
 
-	QString name = ui.nameField->text();
-	QString position = ui.positionField->text();
+            mainLayout->addWidget(levelWidget);
+            levelWidgets.push_back(levelWidget);
+        }
 
-	QLineEdit* roleField = new QLineEdit(name);
-	roleField->setObjectName("roleField");
+        static random_device rd;
+        static mt19937 gen(rd());
+        static uniform_int_distribution<> dis(50, 200);
+        int r = dis(gen);
+        int g = dis(gen);
+        int b = dis(gen);
 
-	layout->addWidget(roleField);
+        QColor color(r, g, b);
 
-	ui.nameField->clear();
-	ui.positionField->clear();
+        Role* role = new Role(0, name, position, color, levelWidgets[0]);
+        roles.push_back(unique_ptr<Role>(role));
+
+        QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(levelWidgets[0]->layout());
+        layout->addWidget(role->getButton());
+
+        connect(role, &Role::focusChanged, this, &QtTree::onButtonFocusChanged);
+
+        ui.nameField->clear();
+        ui.positionField->clear();
+
+        
+    }
+    
 }
 
+void QtTree::onButtonFocusChanged(QPushButton* button) {
+    if (button) {
+        if (lastFocusedButton) {
+            void* ptr = lastFocusedButton->property("rolePtr").value<void*>();
+            Role* roleHead = static_cast<Role*>(ptr);
+            QColor color = roleHead->getColor();
 
-void QtTree::createLevel(int level) {
-    QWidget* horizontalLayoutWidget = new QWidget(ui.treeFrame);
-    QString widgetName = QString("horizontalLayoutWidget_%1").arg(level);
-    horizontalLayoutWidget->setObjectName(widgetName);
+            const QString defaultStyle =
+                "border: none; "
+                "border-radius: 5px; "
+                "color: white;"
+                "background-color: " + color.name() + ";";
 
-    QHBoxLayout* levelLayout = new QHBoxLayout(horizontalLayoutWidget);
-    levelLayout->setSpacing(6);
-    levelLayout->setContentsMargins(11, 11, 11, 11);
+            lastFocusedButton->setStyleSheet(defaultStyle);
+        }
 
-    horizontalLayoutWidget->setLayout(levelLayout);
-    if (!ui.treeFrame->layout()) {
-        qWarning() << "No layout set for treeFrame. Setting QVBoxLayout.";
-        QVBoxLayout* frameLayout = new QVBoxLayout(ui.treeFrame);
-        ui.treeFrame->setLayout(frameLayout);
+        lastFocusedButton = button;
+        void* ptr = lastFocusedButton->property("rolePtr").value<void*>();
+        Role* roleHead = static_cast<Role*>(ptr);
+        roleHead->printSubordinates();
+        QColor color = roleHead->getColor();
+
+        const QString focusedStyle =
+            "border: 2px solid black; "
+            "border-radius: 5px; "
+            "color: white;"
+            "background-color: " + color.name() + ";";
+
+        lastFocusedButton->setStyleSheet(focusedStyle);
     }
-
-    ui.treeFrame->layout()->addWidget(horizontalLayoutWidget);
-    widgetVector.push_back(horizontalLayoutWidget);
-
-	
 }
 
 QtTree::~QtTree() {
